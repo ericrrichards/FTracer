@@ -29,7 +29,7 @@ let rec color r (world:IHitable) (depth:int) =
         |None ->
             let unitDirection = r.Direction.Normalized
             let t = 0.5 * (unitDirection.Y + 1.0)
-            (1.0-t)*Color.White + t*{R=0.5;G=0.7;B=1.0}               
+            (1.0-t)*Color.White + t* rgb(0.5,0.7,1.0)              
 
 
 
@@ -40,10 +40,10 @@ let main argv =
     let ns = 50
     let sb = StringBuilder(sprintf "P3\n%d %d\n255\n" nx ny)
     let world = HitableList ([
-        {Center = -Vector3.UnitZ; Radius=0.5; Material =Lambertian({R=0.8;G=0.3;B=0.3})}; 
-        {Center = {X=0.0; Y = -100.5; Z = -1.0};Radius=100.0; Material=Lambertian({R=0.8;G=0.8;B=0.0})};
-        {Center={X=1.0;Y=0.0;Z = -1.0}; Radius = 0.5; Material = Metal({R=0.8;G=0.6;B=0.2}, 1.0)};
-        {Center={X= -1.0; Y=0.0; Z = -1.0}; Radius = 0.5; Material = Metal({R=0.8;G=0.8;B=0.8}, 0.3)}
+        Sphere(-Vector3.UnitZ, 0.5,Lambertian(rgb(0.8,0.3,0.3))); 
+        Sphere(vec(0.0,-100.5,-1.0),100.0, Lambertian(rgb(0.8,0.8,0.0)));
+        Sphere(vec(1.0,0.0,-1.0), 0.5, Metal(rgb(0.8,0.6,0.2), 1.0));
+        Sphere(vec(-1.0,0.0,-1.0), 0.5, Metal(rgb(0.8,0.8,0.8), 0.3))
     ])
     let cam = Camera()
     let rand = Random()

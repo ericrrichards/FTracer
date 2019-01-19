@@ -21,8 +21,10 @@ type HitableList(hitables:List<IHitable>) =
 
 
 
-type Sphere = 
-    {Center:Vector3; Radius:float; Material:IMaterial}
+type Sphere(Center:Vector3, Radius:float, Material:IMaterial) = 
+    member __.Center = Center
+    member __.Radius = Radius
+    member __.Material = Material
     interface IHitable with
         member s.Hit r tmin tmax = 
             let oc = r.Origin - s.Center

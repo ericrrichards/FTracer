@@ -25,7 +25,7 @@ type Vector3 =
     static member UnitX = {X=1.0;Y=0.0;Z=0.0}
     static member UnitY = {X=0.0;Y=1.0;Z=0.0}
     static member UnitZ = {X=0.0;Y=0.0;Z=1.0}
-
+let vec(x,y,z) = {X=x;Y=y;Z=z}
 let dot (v1:Vector3) v2 = v1.Dot(v2)
 let normalize (v:Vector3) = v.Normalized
 
@@ -43,6 +43,7 @@ type Color =
     static member Black = {R=0.0;G=0.0;B=0.0}
     static member Red = {R=1.0;G=0.0;B=0.0}
     member c.GammaCorrect = {R=Math.Sqrt(c.R);G=Math.Sqrt(c.G);B=Math.Sqrt(c.B)}
+let rgb(r,g,b) = {R=r;G=g;B=b}
 
 type Ray = 
     {Origin:Vector3; Direction:Vector3}

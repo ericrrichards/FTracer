@@ -9,9 +9,9 @@ let rand1 = Random()
 // which is confusing as all hell and wasted an hour or more of fiddle-frigging
 let randomInUnitSphere() =
     
-    let mutable p = 2.0*{X = rand1.NextDouble(); Y = rand1.NextDouble(); Z = rand1.NextDouble()} - {X=1.0;Y=1.0;Z=1.0}
+    let mutable p = 2.0*vec(rand1.NextDouble(),rand1.NextDouble(),rand1.NextDouble()) - vec(1.0,1.0,1.0)
     while p.SquaredLength >= 1.0 do
-        p <- 2.0*{X = rand1.NextDouble(); Y = rand1.NextDouble(); Z = rand1.NextDouble()} - {X=1.0;Y=1.0;Z=1.0}
+        p <- 2.0*vec(rand1.NextDouble(),rand1.NextDouble(),rand1.NextDouble()) - vec(1.0,1.0,1.0)
     p
 
 let reflect v n = 
