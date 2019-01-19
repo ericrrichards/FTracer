@@ -1,12 +1,9 @@
 ﻿module Hitables
 open Tracer.Math
 open System
+open Interfaces
 
-type HitRecord = 
-    { T:float; P:Vector3; Normal:Vector3}
 
-type IHitable =
-    abstract Hit: Ray -> float -> float -> option<HitRecord>
 
 type HitableList(hitables:List<IHitable>) = 
     member __.List = hitables
@@ -25,7 +22,7 @@ type HitableList(hitables:List<IHitable>) =
 
 
 type Sphere = 
-    {Center:Vector3; Radius:float}
+    {Center:Vector3; Radius:float; Material:IMaterial}
     interface IHitable with
         member s.Hit r tmin tmax = 
             let oc = r.Origin - s.Center
@@ -38,12 +35,12 @@ type Sphere =
                 let temp = (-b - Math.Sqrt(b*b-a*c))/a
                 if temp < tmax && temp > tmin then
                     let p = r.PointAt temp
-                    Some({T=temp; P=p; Normal = (p-s.Center)/s.Radius})
+                    Some({T=temp; P=p; Normal = (p-s.Center)/s.Radius; Material =s.Material})
                 else 
                     let temp = (-b + Math.Sqrt(b*b-a*c))/a
                     if temp < tmax && temp > tmin then
                         let p = r.PointAt temp
-                        Some({T=temp; P=p; Normal = (p-s.Center)/s.Radius})
+                        Some({T=temp; P=p; Normal = (p-s.Center)/s.Radius; Material = s.Material})
                     else 
                         None
             else 

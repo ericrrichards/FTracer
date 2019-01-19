@@ -7,27 +7,25 @@ open System.Diagnostics
 open Tracer.Math
 open Hitables
 open Camera
-
-
-let rand1 = Random()
-let randomInUnitSphere() =
-    
-    let mutable p = 2.0*{X = rand1.NextDouble(); Y = rand1.NextDouble(); Z = rand1.NextDouble()} - {X=1.0;Y=1.0;Z=1.0}
-    while p.SquaredLength >= 1.0 do
-        p <- 2.0*{X = rand1.NextDouble(); Y = rand1.NextDouble(); Z = rand1.NextDouble()} - {X=1.0;Y=1.0;Z=1.0}
-    p
+open Interfaces
+open Materials
 
 
 
-let rec color r (world:IHitable) = 
-    let hit = world.Hit r 0.0 100000.0
+
+
+
+let rec color r (world:IHitable) (depth:int) = 
+    let hit = world.Hit r 0.001 System.Double.MaxValue
 
     match hit with
-        |Some h ->            
-            let target = h.P + h.Normal + randomInUnitSphere()
-            let scatter = {Origin = h.P; Direction = target - h.P}
-            0.5 * (color scatter world)
-            //0.5 * {R= h.Normal.X+1.0; G = h.Normal.Y+1.0; B = h.Normal.Z + 1.0}
+        |Some h ->  
+            if depth > 50 then 
+                Color.Black
+            else
+                match h.Material.Scatter r h with
+                    | Some s -> (s.Attenuation * (color s.Scattered world (depth+1)))
+                    | None -> Color.Black
         |None ->
             let unitDirection = r.Direction.Normalized
             let t = 0.5 * (unitDirection.Y + 1.0)
@@ -37,13 +35,16 @@ let rec color r (world:IHitable) =
 
 [<EntryPoint>]
 let main argv =
-    let nx = 200
-    let ny = 100
+    let nx = 400
+    let ny = 200
     let ns = 50
-    let sb = StringBuilder(sprintf "P3\n%d %d\n255\n" nx ny)    
-    let sphere = {Center = -Vector3.UnitZ; Radius=0.5}
-    let sphere2 = {Center = {X=0.0; Y = -100.5; Z = -1.0};Radius=100.0}
-    let world = HitableList ([sphere; sphere2])
+    let sb = StringBuilder(sprintf "P3\n%d %d\n255\n" nx ny)
+    let world = HitableList ([
+        {Center = -Vector3.UnitZ; Radius=0.5; Material =Lambertian({R=0.8;G=0.3;B=0.3})}; 
+        {Center = {X=0.0; Y = -100.5; Z = -1.0};Radius=100.0; Material=Lambertian({R=0.8;G=0.8;B=0.0})};
+        {Center={X=1.0;Y=0.0;Z = -1.0}; Radius = 0.5; Material = Metal({R=0.8;G=0.6;B=0.2}, 1.0)};
+        {Center={X= -1.0; Y=0.0; Z = -1.0}; Radius = 0.5; Material = Metal({R=0.8;G=0.8;B=0.8}, 0.3)}
+    ])
     let cam = Camera()
     let rand = Random()
     for j = ny-1 downto 0 do
@@ -55,7 +56,7 @@ let main argv =
 
                 let r = cam.GetRay u v
 
-                col <- col + (color r world)
+                col <- col + (color r world 0)
             col <- col/float(ns)
             let gCol = col.GammaCorrect
             let ir = int(255.99*gCol.R)
