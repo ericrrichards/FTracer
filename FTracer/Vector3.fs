@@ -28,6 +28,7 @@ type Vector3 =
     static member UnitZ = {X=0.0;Y=0.0;Z=1.0}
 
 let dot (v1:Vector3) v2 = v1.Dot(v2)
+let normalize (v:Vector3) = v.Normalized
 
 type Color = 
     { R:float; G:float; B:float}
@@ -55,4 +56,5 @@ type Sphere =
         let b = 2.0 * dot oc r.Direction
         let c = dot oc oc - c.Radius*c.Radius
         let discriminant = b*b - 4.0*a*c;
-        discriminant > 0.0
+        if discriminant < 0.0 then -1.0
+        else (-b - Math.Sqrt(discriminant))/(2.0*a)

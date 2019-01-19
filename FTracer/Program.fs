@@ -8,12 +8,14 @@ open Tracer
 
 
 let color r (sphere:Sphere) = 
-    match sphere.Hit r with 
-    | true -> Color.Red
-    | false -> 
+    let t= sphere.Hit r
+    if t > 0.0 then 
+        let n = normalize (r.PointAt t - sphere.Center)
+        0.5 * {R=n.X+1.0; G = n.Y+1.0; B = n.Z + 1.0}
+    else
         let unitDirection = r.Direction.Normalized
         let t = 0.5 * (unitDirection.Y + 1.0)
-        (1.0-t)*Color.White + t*{R=0.5;G=0.7;B=1.0}
+        (1.0-t)*Color.White + t*{R=0.5;G=0.7;B=1.0}       
 
 
 
