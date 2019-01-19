@@ -4,8 +4,9 @@ open System
 open System.Text
 open System.IO
 open System.Diagnostics
-open Tracer
-
+open Math
+open Hitables
+open Camera
 
 let color r (world:IHitable) = 
     let hit = world.Hit r 0.0 100000.0
@@ -24,23 +25,24 @@ let color r (world:IHitable) =
 let main argv =
     let nx = 800
     let ny = 400
-    let sb = StringBuilder(sprintf "P3\n%d %d\n255\n" nx ny)
-    let lowerLeft = {X = -2.0; Y = -1.0; Z = -1.0}
-    let horizontal = {X=4.0; Y = 0.0; Z=0.0}
-    let vertical = {X = 0.0; Y = 2.0; Z = 0.0}
-    let origin = Vector3.Zero
+    let ns = 100
+    let sb = StringBuilder(sprintf "P3\n%d %d\n255\n" nx ny)    
     let sphere = {Center = -Vector3.UnitZ; Radius=0.5}
     let sphere2 = {Center = {X=0.0; Y = -100.5; Z = -1.0};Radius=100.0}
     let world = HitableList ([sphere; sphere2])
+    let cam = Camera()
+    let rand = Random()
     for j = ny-1 downto 0 do
         for i = 0 to nx-1 do
+            let mutable col = Color.Black
+            for s = 0 to ns-1 do
+                let u = (float(i) + rand.NextDouble())/float(nx)
+                let v = (float(j) + rand.NextDouble())/float(ny)
 
-            let u = float(i)/float(nx)
-            let v = float(j)/float(ny)
+                let r = cam.GetRay u v
 
-            let r = {Origin = origin; Direction = lowerLeft + u*horizontal + v*vertical}
-
-            let col = color r world            
+                col <- col + (color r world)
+            col <- col/float(ns)
             let ir = int(255.99*col.R)
             let ig = int(255.99*col.G)
             let ib = int(255.99*col.B)
