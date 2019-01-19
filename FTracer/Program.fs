@@ -7,10 +7,13 @@ open System.Diagnostics
 open Tracer
 
 
-let color r = 
-    let unitDirection = r.Direction.Normalized
-    let t = 0.5 * (unitDirection.Y + 1.0)
-    (1.0-t)*Color.White + t*{R=0.5;G=0.7;B=1.0}
+let color r (sphere:Sphere) = 
+    match sphere.Hit r with 
+    | true -> Color.Red
+    | false -> 
+        let unitDirection = r.Direction.Normalized
+        let t = 0.5 * (unitDirection.Y + 1.0)
+        (1.0-t)*Color.White + t*{R=0.5;G=0.7;B=1.0}
 
 
 
@@ -23,6 +26,7 @@ let main argv =
     let horizontal = {X=4.0; Y = 0.0; Z=0.0}
     let vertical = {X = 0.0; Y = 2.0; Z = 0.0}
     let origin = Vector3.Zero
+    let sphere = {Center = -Vector3.UnitZ; Radius=0.5}
     for j = ny-1 downto 0 do
         for i = 0 to nx-1 do
 
@@ -31,7 +35,7 @@ let main argv =
 
             let r = {Origin = origin; Direction = lowerLeft + u*horizontal + v*vertical}
 
-            let col = color r
+            let col = color r sphere
             
             let ir = int(255.99*col.R)
             let ig = int(255.99*col.G)
