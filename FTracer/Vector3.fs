@@ -1,5 +1,7 @@
 ﻿module Tracer
 
+open System
+
 type Vector3 = 
     { X : float; Y : float; Z : float}        
     static member (~-) (v) = {X = -v.X; Y = -v.Y; Z = -v.Z}
@@ -20,6 +22,8 @@ type Vector3 =
         Z = v1.X * v2.Y - v1.Y * v2.X
     }
 
+    static member Zero = {X = 0.0; Y = 0.0; Z = 0.0}
+
 type Color = 
     { R:float; G:float; B:float}
     static member (~-) (c) = {R = -c.R; G = -c.G; B = -c.B}
@@ -30,3 +34,9 @@ type Color =
     static member (*) (c, s) =  { R = c.R * s; G = c.G * s; B = c.B * s}
     static member (*) (s, c) =  { R = c.R * s; G = c.G * s; B = c.B * s}
     static member (/) (c, s) =  { R = c.R / s; G = c.G / s; B = c.B / s}
+    static member White = {R=1.0;G=1.0;B=1.0}
+    static member Black = {R=0.0;G=0.0;B=0.0}
+
+type Ray = 
+    {Origin:Vector3; Direction:Vector3}
+    member r.PointAt t = r.Origin + t*r.Direction
