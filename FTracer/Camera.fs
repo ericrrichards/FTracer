@@ -1,5 +1,5 @@
 ﻿module Camera
-open Math
+open Tracer.Math
 
 type Camera() =
     member __.LowerLeftCorner = {X = -2.0;Y = -1.0;Z = -1.0}

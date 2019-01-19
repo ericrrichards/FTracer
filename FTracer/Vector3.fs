@@ -1,14 +1,15 @@
-﻿module Math
+﻿module Tracer.Math
+open System
 
 type Vector3 = 
     { X : float; Y : float; Z : float}        
     static member (~-) (v) = {X = -v.X; Y = -v.Y; Z = -v.Z}
-    static member (+) (v1, v2) = { X=v1.X + v2.X; Y = v1.Y + v2.Y; Z = v1.Z + v2.Z}
-    static member (-) (v1, v2) = { X=v1.X - v2.X; Y = v1.Y-v2.Y; Z = v1.Z - v2.Z}
-    static member (*) (v, s) = {X = v.X*s; Y = v.Y*s; Z=v.Z*s}
-    static member (*) (s, v) = {X = v.X*s; Y = v.Y*s; Z=v.Z*s}
-    static member (/) (v, s) = {X = v.X/s; Y = v.Y/s; Z=v.Z/s}
-    member v1.Dot v2 = v1.X * v2.X + v1.Y*v2.Y + v1.Z * v2.Z
+    static member (+) (v1, v2) = { X = v1.X + v2.X; Y = v1.Y + v2.Y; Z = v1.Z + v2.Z}
+    static member (-) (v1, v2) = { X = v1.X - v2.X; Y = v1.Y - v2.Y; Z = v1.Z - v2.Z}
+    static member (*) (v, s) = { X = v.X * s; Y = v.Y * s; Z = v.Z * s}
+    static member (*) (s, v) = { X = v.X * s; Y = v.Y * s; Z = v.Z * s}
+    static member (/) (v, s) = { X = v.X / s; Y = v.Y / s; Z = v.Z / s}
+    member v1.Dot v2 = v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z
     member v1.Cross v2 = { 
         X = v1.Y * v2.Z - v1.Z * v2.Y
         Y = -(v1.X * v2.Z - v1.Z * v2.X)
@@ -41,9 +42,11 @@ type Color =
     static member White = {R=1.0;G=1.0;B=1.0}
     static member Black = {R=0.0;G=0.0;B=0.0}
     static member Red = {R=1.0;G=0.0;B=0.0}
+    member c.GammaCorrect = {R=Math.Sqrt(c.R);G=Math.Sqrt(c.G);B=Math.Sqrt(c.B)}
 
 type Ray = 
     {Origin:Vector3; Direction:Vector3}
     member r.PointAt t = r.Origin + t*r.Direction
+
 
 
