@@ -62,9 +62,10 @@ type Dialectric(ri:float) =
                     -hit.Normal, d.RefractiveIndex, d.RefractiveIndex * (dot r_in.Direction hit.Normal) / r_in.Direction.Length
                 else 
                     hit.Normal, 1.0 / d.RefractiveIndex, -(dot r_in.Direction hit.Normal) / r_in.Direction.Length
-            let reflectProb, refracted = match refract r_in.Direction outwardNormal niOverNt with
-                | Some ref -> schlick cosine d.RefractiveIndex, ref
-                | None -> 1.0, Vector3.Zero
+            let reflectProb, refracted = 
+                match refract r_in.Direction outwardNormal niOverNt with
+                    | Some ref -> schlick cosine d.RefractiveIndex, ref
+                    | None -> 1.0, Vector3.Zero
             if d.Rand.NextDouble() < reflectProb then
                 Some({Scattered = {Origin = hit.P; Direction=reflected}; Attenuation=Color.White})
             else 
