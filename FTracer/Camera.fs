@@ -2,20 +2,33 @@
 open Tracer.Math
 open System
 
-type Camera(lookFrom:Vector3, lookAt:Vector3, vup:Vector3, vfov:float, aspect:float) =
+let rand = new Random()
+let randomInUnitDisk() = 
+    let mutable p = 2.0*vec(rand.NextDouble(),rand.NextDouble(),0.0) - vec(1.0,1.0,0.0)
+    while (dot p p) >= 1.0 do
+        p <- 2.0*vec(rand.NextDouble(),rand.NextDouble(),0.0) - vec(1.0,1.0,0.0)
+    p
+
+
+type Camera(lookFrom:Vector3, lookAt:Vector3, vup:Vector3, vfov:float, aspect:float, aperature:float, focusDist:float) =
     let theta = vfov*Math.PI/180.0
     let halfHeight = Math.Tan(theta/2.0)
     let halfWidth = aspect * halfHeight
-    
-    let w = (lookFrom - lookAt).Normalized
-    let u = (vup.Cross w).Normalized
-    let v = w.Cross u
 
-
-    member __.LowerLeftCorner = __.Origin - halfWidth*u - halfHeight*v - w
-    member __.Horizontal = 2.0*halfWidth*u
-    member __.Vertical = 2.0*halfHeight*v
     member __.Origin = lookFrom
+    member __.w = (lookFrom - lookAt).Normalized
+    member __.u = (vup.Cross __.w).Normalized
+    member __.v= __.w.Cross __.u
+
+    member __.LensRadius = aperature/2.0
+
+    member __.LowerLeftCorner = __.Origin - halfWidth * focusDist * __.u - halfHeight * focusDist * __.v - focusDist * __.w
+    member __.Horizontal = 2.0 * halfWidth * focusDist * __.u
+    member __.Vertical = 2.0 * halfHeight * focusDist * __.v
+    
     
 
-    member c.GetRay u v = {Origin = c.Origin; Direction = c.LowerLeftCorner + u*c.Horizontal + v*c.Vertical - c.Origin}
+    member c.GetRay s t = 
+        let rd = c.LensRadius * randomInUnitDisk()
+        let offset = c.u*rd.X + c.v*rd.Y
+        {Origin = c.Origin+offset; Direction = c.LowerLeftCorner + s*c.Horizontal + t*c.Vertical - c.Origin-offset}

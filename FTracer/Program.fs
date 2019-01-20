@@ -49,8 +49,11 @@ let main argv =
         Sphere(vec(-1.0,0.0,-1.0), 0.5, Dialectric(1.5))
         Sphere(vec(-1.0,0.0,-1.0), -0.45, Dialectric(1.5))
     ])
-    
-    let cam = Camera(vec(-2.0, 2.0, 1.0), vec(0.0, 0.0, -1.0), Vector3.UnitY, 30.0, float(nx)/float(ny))
+    let lookFrom = vec(3.0, 3.0, 2.0)
+    let lookAt = vec(0.0, 0.0, -1.0)
+    let distToFocus = (lookFrom-lookAt).Length
+    let aperature =2.0
+    let cam = Camera(lookFrom, lookAt, Vector3.UnitY, 30.0, float(nx)/float(ny), aperature, distToFocus)
     let rand = Random()
     for j = ny-1 downto 0 do
         for i = 0 to nx-1 do
