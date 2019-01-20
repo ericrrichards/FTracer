@@ -37,13 +37,14 @@ let rec color r (world:IHitable) (depth:int) =
 let main argv =
     let nx = 400
     let ny = 200
-    let ns = 50
+    let ns = 100
     let sb = StringBuilder(sprintf "P3\n%d %d\n255\n" nx ny)
     let world = HitableList ([
-        Sphere(-Vector3.UnitZ, 0.5,Lambertian(rgb(0.8,0.3,0.3))); 
+        Sphere(-Vector3.UnitZ, 0.5,Lambertian(rgb(0.1,0.2,0.5))); 
         Sphere(vec(0.0,-100.5,-1.0),100.0, Lambertian(rgb(0.8,0.8,0.0)));
-        Sphere(vec(1.0,0.0,-1.0), 0.5, Metal(rgb(0.8,0.6,0.2), 1.0));
-        Sphere(vec(-1.0,0.0,-1.0), 0.5, Metal(rgb(0.8,0.8,0.8), 0.3))
+        Sphere(vec(1.0,0.0,-1.0), 0.5, Metal(rgb(0.8,0.6,0.2), 0.0));
+        Sphere(vec(-1.0,0.0,-1.0), 0.5, Dialectric(1.5))
+        Sphere(vec(-1.0,0.0,-1.0), -0.45, Dialectric(1.5))
     ])
     let cam = Camera()
     let rand = Random()
