@@ -10,11 +10,13 @@ let randomInUnitDisk() =
     p
 
 
-type Camera(lookFrom:Vector3, lookAt:Vector3, vup:Vector3, vfov:float, aspect:float, aperature:float, focusDist:float) =
+type Camera(lookFrom:Vector3, lookAt:Vector3, vup:Vector3, vfov:float, aspect:float, aperature:float, focusDist:float, t0:float, t1:float) =
     let theta = vfov*Math.PI/180.0
     let halfHeight = Math.Tan(theta/2.0)
     let halfWidth = aspect * halfHeight
 
+    member __.time0 = t0
+    member __.time1 = t1
     member __.Origin = lookFrom
     member __.w = (lookFrom - lookAt).Normalized
     member __.u = (vup.Cross __.w).Normalized
@@ -31,4 +33,5 @@ type Camera(lookFrom:Vector3, lookAt:Vector3, vup:Vector3, vfov:float, aspect:fl
     member c.GetRay s t = 
         let rd = c.LensRadius * randomInUnitDisk()
         let offset = c.u*rd.X + c.v*rd.Y
-        {Origin = c.Origin+offset; Direction = c.LowerLeftCorner + s*c.Horizontal + t*c.Vertical - c.Origin-offset}
+        let time = c.time0 + rand.NextDouble() * (c.time1-c.time0)
+        Ray(c.Origin+offset, c.LowerLeftCorner + s*c.Horizontal + t*c.Vertical - c.Origin-offset, time)

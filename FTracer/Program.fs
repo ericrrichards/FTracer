@@ -54,6 +54,14 @@ let randomScene() =
 
 
     HitableList(list)
+let motionBlur() = 
+    HitableList ([
+        MovingSphere(-Vector3.UnitZ, vec(0.5, 0.5, -1.0), 0.5,Lambertian(rgb(0.1,0.2,0.5)), 0.0, 1.0); 
+        Sphere(vec(0.0,-100.5,-1.0),100.0, Lambertian(rgb(0.8,0.8,0.0)));
+        Sphere(vec(1.0,0.0,-1.0), 0.5, Metal(rgb(0.8,0.6,0.2), 0.0));
+        Sphere(vec(-1.0,0.0,-1.0), 0.5, Dialectric(1.5))
+        Sphere(vec(-1.0,0.0,-1.0), -0.45, Dialectric(1.5))
+    ])
 
 
 [<EntryPoint>]
@@ -71,12 +79,14 @@ let main argv =
     //    Sphere(vec(-1.0,0.0,-1.0), 0.5, Dialectric(1.5))
     //    Sphere(vec(-1.0,0.0,-1.0), -0.45, Dialectric(1.5))
     //])
-    let world = randomScene()
-    let lookFrom = vec(13.0, 2.0, 3.0)
+    //let world = randomScene()
+    let world = motionBlur()
+    //let lookFrom = vec(13.0, 2.0, 3.0)
+    let lookFrom = vec(0.0, 2.0, 5.0)
     let lookAt = vec(0.0, 0.0, 0.0)
     let distToFocus = 10.0
     let aperature =0.1
-    let cam = Camera(lookFrom, lookAt, Vector3.UnitY, 20.0, float(nx)/float(ny), aperature, distToFocus)
+    let cam = Camera(lookFrom, lookAt, Vector3.UnitY, 20.0, float(nx)/float(ny), aperature, distToFocus, 0.0, 1.0)
     let rand = Random()
     for j = ny-1 downto 0 do
         for i = 0 to nx-1 do

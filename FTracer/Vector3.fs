@@ -45,8 +45,10 @@ type Color =
     member c.GammaCorrect = {R=Math.Sqrt(c.R);G=Math.Sqrt(c.G);B=Math.Sqrt(c.B)}
 let rgb(r,g,b) = {R=r;G=g;B=b}
 
-type Ray = 
-    {Origin:Vector3; Direction:Vector3}
+type Ray(Origin:Vector3, Direction:Vector3, time:float) =
+    member __.Origin = Origin
+    member __.Direction = Direction
+    member __.Time = time
     member r.PointAt t = r.Origin + t*r.Direction
 
 

@@ -36,7 +36,7 @@ type Lambertian(Albedo:Color)=
     interface IMaterial with
         member l.Scatter r_in hit = 
             let target = hit.P + hit.Normal + randomInUnitSphere()
-            Some {Scattered = {Origin = hit.P; Direction = target-hit.P}; Attenuation=l.Albedo} 
+            Some {Scattered = Ray(hit.P, target-hit.P, r_in.Time); Attenuation=l.Albedo} 
 
 type Metal(Albedo:Color, fuzz:float)=
     member __.Albedo = Albedo
@@ -45,7 +45,7 @@ type Metal(Albedo:Color, fuzz:float)=
     interface IMaterial with
         member m.Scatter r_in hit = 
             let reflected = reflect r_in.Direction.Normalized hit.Normal
-            let scattered = {Origin = hit.P; Direction = reflected + m.Fuzz*randomInUnitSphere()}
+            let scattered = Ray(hit.P, reflected + m.Fuzz*randomInUnitSphere(), r_in.Time)
             if dot scattered.Direction hit.Normal > 0.0 then
                 Some {Scattered = scattered; Attenuation = m.Albedo}
             else
@@ -67,6 +67,6 @@ type Dialectric(ri:float) =
                     | Some ref -> schlick cosine d.RefractiveIndex, ref
                     | None -> 1.0, Vector3.Zero
             if d.Rand.NextDouble() < reflectProb then
-                Some({Scattered = {Origin = hit.P; Direction=reflected}; Attenuation=Color.White})
+                Some({Scattered = Ray(hit.P, reflected, r_in.Time); Attenuation=Color.White})
             else 
-                Some({Scattered = {Origin = hit.P; Direction=refracted}; Attenuation=Color.White})
+                Some({Scattered = Ray(hit.P, refracted, r_in.Time); Attenuation=Color.White})
