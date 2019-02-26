@@ -53,7 +53,7 @@ let randomScene() =
     ]
 
 
-    BVHNode(list)
+    BVHNode(list, 0.0,0.0)
 let motionBlur() = 
     BVHNode ([
         MovingSphere(-Vector3.UnitZ, vec(0.5, 0.5, -1.0), 0.5,Lambertian(rgb(0.1,0.2,0.5)), 0.0, 1.0); 
