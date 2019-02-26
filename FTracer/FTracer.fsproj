@@ -11,6 +11,7 @@
     <Compile Include="Interfaces.fs" />
     <Compile Include="Materials.fs" />
     <Compile Include="Hitables.fs" />
+    <Compile Include="BVHNode.fs" />
     <Compile Include="Camera.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
