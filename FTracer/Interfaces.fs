@@ -1,5 +1,6 @@
 ﻿module Interfaces
 open Tracer.Math
+open AABB
 
 type Scatter = {Scattered:Ray; Attenuation:Color}
 
@@ -10,3 +11,4 @@ and HitRecord =
 
 type IHitable =
     abstract Hit: Ray -> float -> float -> option<HitRecord>
+    abstract BoundingBox: float -> float -> option<AABB>

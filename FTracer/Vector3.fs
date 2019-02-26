@@ -25,6 +25,14 @@ type Vector3 =
     static member UnitX = {X=1.0;Y=0.0;Z=0.0}
     static member UnitY = {X=0.0;Y=1.0;Z=0.0}
     static member UnitZ = {X=0.0;Y=0.0;Z=1.0}
+
+    member this.Item
+        with get(i)= 
+            if i = 0 then this.X
+            elif i =1 then this.Y
+            else this.Z
+
+
 let vec(x,y,z) = {X=x;Y=y;Z=z}
 let dot (v1:Vector3) v2 = v1.Dot(v2)
 let normalize (v:Vector3) = v.Normalized

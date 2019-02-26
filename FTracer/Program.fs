@@ -53,15 +53,15 @@ let randomScene() =
     ]
 
 
-    HitableList(list)
+    BVHNode(list)
 let motionBlur() = 
-    HitableList ([
+    BVHNode ([
         MovingSphere(-Vector3.UnitZ, vec(0.5, 0.5, -1.0), 0.5,Lambertian(rgb(0.1,0.2,0.5)), 0.0, 1.0); 
         Sphere(vec(0.0,-100.5,-1.0),100.0, Lambertian(rgb(0.8,0.8,0.0)));
         Sphere(vec(1.0,0.0,-1.0), 0.5, Metal(rgb(0.8,0.6,0.2), 0.0));
         Sphere(vec(-1.0,0.0,-1.0), 0.5, Dialectric(1.5))
         Sphere(vec(-1.0,0.0,-1.0), -0.45, Dialectric(1.5))
-    ])
+    ], 0.0, 1.0)
 
 
 [<EntryPoint>]
